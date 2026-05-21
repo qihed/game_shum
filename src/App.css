@@ -502,6 +502,76 @@
   margin: 10px 0 0;
 }
 
+.epilogueCard {
+  max-width: 720px;
+}
+
+.epilogueIntro {
+  margin-bottom: 20px;
+  line-height: 1.65;
+}
+
+.epilogueFinalePick {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.epilogueSections {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+
+.epilogueSection {
+  padding: 18px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.epilogueSection:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.epilogueSectionTitle {
+  font-family: var(--heading);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-h);
+  letter-spacing: -0.4px;
+  margin: 0 0 12px;
+  line-height: 1.25;
+}
+
+.epilogueSectionBody {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text);
+  opacity: 0.95;
+}
+
+.epilogueStats {
+  margin-top: 8px;
+}
+
+.epilogueStatsHint {
+  margin: 8px 0 12px;
+  font-size: 14px;
+  line-height: 1.55;
+  opacity: 0.8;
+}
+
+.epilogueClosing {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.85;
+  font-style: italic;
+}
+
 .effects {
   display: flex;
   flex-wrap: wrap;

@@ -5,7 +5,6 @@ import { useGameState } from './game/useGameState'
 import { BlockScreen } from './screens/BlockScreen'
 import { FinalScreen } from './screens/FinalScreen'
 import { PassportScreen } from './screens/PassportScreen'
-import { ResultScreen } from './screens/ResultScreen'
 import { SummaryScreen } from './screens/SummaryScreen'
 import { WelcomeScreen } from './screens/WelcomeScreen'
 
@@ -42,13 +41,6 @@ function App() {
           )}
           {game.phase === 'block' && game.currentBlock && (
             <BlockScreen block={game.currentBlock} onChoose={game.actions.chooseInBlock} />
-          )}
-          {game.phase === 'result' && game.currentBlock && game.lastChoice && (
-            <ResultScreen
-              block={game.currentBlock}
-              choice={game.lastChoice}
-              onNext={game.actions.nextFromResult}
-            />
           )}
           {game.phase === 'final' && <FinalScreen onChoose={game.actions.chooseFinal} />}
           {game.phase === 'summary' && (

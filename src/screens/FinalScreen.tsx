@@ -16,6 +16,7 @@ export function FinalScreen({ onChoose }: { onChoose: (choiceId: string) => void
         <div className="blockSection">
           <div className="sectionLabel">Ситуация</div>
           <div className="sectionBody prewrap">{final.situation}</div>
+          <div className="thinkInline">Думай, думай, думай....</div>
         </div>
 
         <div className="choices">

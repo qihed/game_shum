@@ -1,6 +1,14 @@
-import type { PropsWithChildren } from 'react'
+import type { HTMLAttributes, PropsWithChildren } from 'react'
 
-export function Card({ children }: PropsWithChildren) {
-  return <section className="card">{children}</section>
+export function Card({
+  children,
+  className,
+  ...rest
+}: PropsWithChildren<HTMLAttributes<HTMLElement>>) {
+  return (
+    <section className={className ? `card ${className}` : 'card'} {...rest}>
+      {children}
+    </section>
+  )
 }
 

@@ -1,5 +1,6 @@
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import { buildEpilogue } from '../game/epilogue'
 import { story } from '../game/story'
 import type { GameHistoryEntry, StatKey, Stats } from '../game/types'
 
@@ -22,6 +23,7 @@ export function SummaryScreen({
   history: GameHistoryEntry[]
   onRestart: () => void
 }) {
+  const epilogue = buildEpilogue(stats, history)
   const finalEntry = history.findLast((h) => h.kind === 'final') as
     | { kind: 'final'; choiceId: string }
     | undefined
@@ -31,35 +33,35 @@ export function SummaryScreen({
 
   return (
     <div className="screen">
-      <Card>
-        <h1 className="title">Итог</h1>
-        <p className="lead">
-          Спасибо за прохождение. Вы можете пересобрать путь и сравнить, как меняются
-          решения и показатели.
-        </p>
+      <Card className="epilogueCard">
+        <h1 className="title">Итог вашей истории</h1>
+        <p className="lead epilogueIntro">{epilogue.intro}</p>
 
         {finalChoice && (
-          <div className="blockSection">
-            <div className="sectionLabel">Ваш финал</div>
+          <div className="epilogueFinalePick">
+            <div className="sectionLabel">Финальная развилка</div>
             <div className="pickLine">
               <span className="pickId">{finalChoice.id}</span>
               <span className="pickLabel">{finalChoice.label}</span>
             </div>
-            {finalChoice.consequence && (
-              <div className="sectionBody prewrap" style={{ marginTop: 12 }}>
-                {finalChoice.consequence}
-              </div>
-            )}
-            {finalChoice.analysis && (
-              <div className="sectionBody prewrap" style={{ marginTop: 12 }}>
-                {finalChoice.analysis}
-              </div>
-            )}
           </div>
         )}
 
-        <div className="blockSection">
+        <div className="epilogueSections">
+          {epilogue.sections.map((section) => (
+            <article key={section.title} className="epilogueSection">
+              <h2 className="epilogueSectionTitle">{section.title}</h2>
+              <div className="epilogueSectionBody prewrap">{section.body}</div>
+            </article>
+          ))}
+        </div>
+
+        <div className="blockSection epilogueStats">
           <div className="sectionLabel">Финальные показатели</div>
+          <p className="epilogueStatsHint">
+            Они не «оценка в школе», а срез того, как вы вели проект: ремесло, команду,
+            контакт со зрителем, выносливость.
+          </p>
           <div className="statsSummary">
             {Object.entries(stats).map(([k, v]) => (
               <div className="statsSummaryItem" key={k}>
@@ -71,15 +73,27 @@ export function SummaryScreen({
         </div>
 
         <details className="history">
-          <summary>Показать путь (выборы)</summary>
+          <summary>Показать все выборы по шагам</summary>
           <ol>
-            {history.map((h, idx) => (
-              <li key={idx}>
-                {h.kind === 'block' ? `Блок ${h.blockId}: ${h.choiceId}` : `Финал: ${h.choiceId}`}
-              </li>
-            ))}
+            {history.map((h, idx) => {
+              if (h.kind === 'final') {
+                return <li key={idx}>Финал: {h.choiceId}</li>
+              }
+              const block = story.blocks.find((b) => b.id === h.blockId)
+              const choice = block?.choices.find((c) => c.id === h.choiceId)
+              return (
+                <li key={idx}>
+                  {block?.title ?? `Блок ${h.blockId}`}: {choice?.label ?? h.choiceId}
+                </li>
+              )
+            })}
           </ol>
         </details>
+
+        <p className="epilogueClosing">
+          Думай, думай, думай — и если захотите, пройдите путь иначе. Другой порядок
+          ответов соберёт другую жизнь того же фильма.
+        </p>
 
         <div className="actions">
           <Button onClick={onRestart}>Начать заново</Button>
@@ -88,4 +102,3 @@ export function SummaryScreen({
     </div>
   )
 }
-

@@ -15,7 +15,7 @@ type PersistedState = {
   lastDelta: Partial<Stats> | null
 }
 
-const STORAGE_KEY = 'ne_finalny_dubl_v1'
+const STORAGE_KEY = 'ne_finalny_dubl_v2'
 
 const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n))
 
@@ -65,9 +65,7 @@ export function useGameState() {
   }, [state])
 
   const currentBlock: Block | null =
-    state.phase === 'block' || state.phase === 'result'
-      ? story.blocks[state.blockIndex] ?? null
-      : null
+    state.phase === 'block' ? story.blocks[state.blockIndex] ?? null : null
 
   const lastChoice: Choice | null = useMemo(() => {
     if (!currentBlock || !state.lastChoiceId) return null
@@ -98,30 +96,23 @@ export function useGameState() {
           if (!block || !choice) return s
 
           const delta = choice.deltaStats ?? emptyDelta()
+          const nextIndex = s.blockIndex + 1
+          const nextPhase =
+            nextIndex >= story.blocks.length
+              ? story.final
+                ? 'final'
+                : 'summary'
+              : 'block'
+
           return {
             ...s,
-            phase: 'result',
+            phase: nextPhase,
+            blockIndex: nextPhase === 'block' ? nextIndex : s.blockIndex,
             stats: applyDelta(s.stats, delta),
             history: [...s.history, { kind: 'block', blockId: block.id, choiceId }],
             lastBlockId: block.id,
             lastChoiceId: choiceId,
             lastDelta: delta,
-          }
-        })
-      },
-      nextFromResult: () => {
-        setState((s) => {
-          const nextIndex = s.blockIndex + 1
-          if (nextIndex >= story.blocks.length) {
-            return { ...s, phase: story.final ? 'final' : 'summary' }
-          }
-          return {
-            ...s,
-            phase: 'block',
-            blockIndex: nextIndex,
-            lastChoiceId: null,
-            lastBlockId: null,
-            lastDelta: null,
           }
         })
       },
